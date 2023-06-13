@@ -4,7 +4,7 @@
 ## Introduction
  Transformer-based application on Long-term Time series Forecasting (LTSF) tasks still has two major issues that need to be further investigated: 1) Whether the sparse attention mechanism designed by these methods actually reduce the running time on real devices; 2) Whether these models need extra long input sequences to guarantee their performance? The answers given in this paper are negative. Therefore, to better copy with these two issues, we design a lightweight Period-Attention mechanism (Periodformer). Furthermore, to take full advantage of GPUs for fast hyperparameter optimization (e.g., finding the suitable input length), a Multi-GPU Asynchronous parallel algorithm based on Bayesian Optimization (MABO) is presented. Compared with the state-of-the-art methods, the prediction error of Periodformer reduced by 13% and 26% for multivariate and univariate forecasting, respectively. In addition, MABO reduces the average search time by 46% while finding better hyperparameters. As a conclusion, this paper indicates that LTSF may not need complex attention and extra long input sequences.
 
-<img src="https://github.com/liangdaojun/Periodformer/blob/main/Images/performance.jpg">
+<img src="https://github.com/Anoise/Periodformer/blob/main/Images/performance.jpg">
 
 
 ## Contributions
@@ -14,7 +14,7 @@
  - A multi-GPU asynchronous parallel search algorithm based on Bayesian optimization (MABO) is presented. MABO allocates a process to each GPU via a queue mechanism, and then creates multiple trials at a time for asynchronous parallel search, which greatly accelerates the search speed.
  - Periodformer reduces the prediction error of state-of-the-art (SOTA) methods by around 14.8\% and 22.6\% for multivariate and univariate forecasting, respectively. Besides, MABO reduces the average search time by around 46\% while finding out better hyperparameters.
 
-<img src="https://github.com/liangdaojun/Periodformer/blob/main/Images/period_att.jpg">
+<img src="https://github.com/Anoise/Periodformer/blob/main/Images/period_att.jpg">
 
 
 ## Training Periodformer with MABO
@@ -139,15 +139,15 @@ Note that:
 
 ## Performace on Multivariate setting
 
-<img src="https://github.com/liangdaojun/Periodformer/blob/main/Images/tb_per_1.jpg">
+<img src="https://github.com/Anoise/Periodformer/blob/main/Images/tb_per_1.jpg">
 
 ## Performace on Univariate setting
 
-<img src="https://github.com/liangdaojun/Periodformer/blob/main/Images/tb_per_2.jpg">
+<img src="https://github.com/Anoise/Periodformer/blob/main/Images/tb_per_2.jpg">
 
 ## Effectiveness of MABO
 
-<img src="https://github.com/liangdaojun/Periodformer/blob/main/Images/mabo_per.jpg">
+<img src="https://github.com/Anoise/Periodformer/blob/main/Images/mabo_per.jpg">
 
 ## Citations
 
