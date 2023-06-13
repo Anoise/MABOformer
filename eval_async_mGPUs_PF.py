@@ -8,16 +8,10 @@ import random
 
 import matplotlib.pyplot as plt
 from mabo import ParallelOptimizer, space as sp
-from multiprocessing import current_process, Queue
+from multiprocessing import Queue
 
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
 import torch.utils.data
-from torchvision import datasets
-from torchvision import transforms
 from exp.exp_main import Exp_Main
-
 import time
 
 fix_seed = 2022
@@ -36,16 +30,14 @@ lr = sp.Real("lr", 1e-5, 1e-1, log=True)
 
 space.add_variables([seq_len, label_rate, period_rate, moving_avg, drop, lr])
 
-
 def get_args():
-
     parser = argparse.ArgumentParser(description='Autoformer & Transformer family for Time Series Forecasting')
 
     # basic config
     parser.add_argument('--is_training', type=int,  default=1, help='status')
     parser.add_argument('--model_id', type=str, default='test', help='model id')
-    parser.add_argument('--model', type=str, default='AutoPeriodformerED',
-                        help='model name, options: [AutoPeriodformer, Informer, Transformer]')
+    parser.add_argument('--model', type=str, default='Periodformer',
+                        help='model name, options: [PeriodformerED, Informer, Transformer]')
 
     # data loader
     parser.add_argument('--data', type=str, default='ETTm2', help='dataset type')
@@ -60,12 +52,6 @@ def get_args():
 
     # forecasting task
     parser.add_argument('--pred_len', type=int, default=96, help='prediction sequence length')
-
-    # hyper parameters
-    # parser.add_argument('--seq_len', type=int, default=96, help='input sequence length')
-    # parser.add_argument('--label_len', type=int, default=96, help='input sequence length')
-    # parser.add_argument('--moving_avg', type=int, default=37, help='window size of moving average')
-    # parser.add_argument('--period', type=int, default=24, help='prediction sequence length')
     parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
     parser.add_argument('--d_layers', type=int, default=1, help='num of decoder layers')
     # parser.add_argument('--dropout', type=float, default=0.5, help='dropout')
@@ -104,7 +90,8 @@ def get_args():
 
     # GPU
     parser.add_argument('--use_gpu', type=bool, default=True, help='use gpu')
-    #parser.add_argument('--gpu', type=int, default=0, help='gpu')
+    parser.add_argument('--num_gpus', type=int, default=1, help='gpu')
+    parser.add_argument('--num_trails', type=int, default=32, help='max trail numbers')
     parser.add_argument('--use_multi_gpu', action='store_true', help='use multiple gpus', default=False)
     parser.add_argument('--devices', type=str, default='0', help='device ids of multile gpus')
 
@@ -112,7 +99,6 @@ def get_args():
 
 def get_vars(config):
 
-    args = get_args()
     args.use_gpu = True if torch.cuda.is_available() and args.use_gpu else False
 
     if args.use_gpu and args.use_multi_gpu:
@@ -122,7 +108,6 @@ def get_vars(config):
         args.gpu = args.device_ids[0]
 
     ### Todo Change Variable
-
     args.seq_len = config['seq_len']
     args.label_len = int(config['label_rate'] * args.seq_len)
     args.period = int(config['period_rate'] * args.seq_len)
@@ -131,9 +116,8 @@ def get_vars(config):
     args.dropout = config['drop']
     args.learning_rate = config['lr']
 
-    # print(args.seq_len, args.label_len, args.period, 
-    # args.moving_avg, args.dropout,  args.learning_rate )
-    # exit()
+    # print(args.seq_len, args.label_len, args.period, args.moving_avg, args.dropout,  args.learning_rate )
+
     # setting record of experiments
     setting = '{}_{}_{}_ft{}_sl{}_pl{}_ll{}_pe{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_dt{}_{}'.format(
         args.model_id,
@@ -183,12 +167,11 @@ def objective(config):
     return {'objectives': (val_error,)}
 
 
-NUM_GPUS = 8
-
 if __name__ == "__main__":
 
+    args = get_args()
     queue = Queue()
-    for gpu_ids in range(NUM_GPUS):
+    for gpu_ids in range(args.num_gpus):
         queue.put(gpu_ids)
 
     # Parallel Evaluation on Local Machine
@@ -196,13 +179,12 @@ if __name__ == "__main__":
         objective,
         space,
         parallel_strategy='async',
-        batch_size=NUM_GPUS,
+        batch_size=args.num_gpus,
         batch_strategy='default',
         num_objectives=1,
         num_constraints=0,
-        max_runs=16,
+        max_runs=args.num_trails,
         surrogate_type='gp',
-        #surrogate_type='auto',
         time_limit_per_trial=18000,
         task_id='parallel_async',
     )
@@ -212,8 +194,3 @@ if __name__ == "__main__":
     print('time = ', time.time() - begin_time)
 
     print(history)
-
-    # history.plot_convergence(true_minimum=0.397887)
-    # plt.show()
-
-    # history.visualize_hiplot()
