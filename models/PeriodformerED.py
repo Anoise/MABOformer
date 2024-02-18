@@ -8,8 +8,7 @@ from layers.Autoformer_EncDec import Encoder, Decoder, EncoderLayer, DecoderLaye
 
 class Model(nn.Module):
     """
-    Autoformer is the first method to achieve the series-wise connection,
-    with inherent O(LlogL) complexity
+    Paper link: https://arxiv.org/abs/2306.05035
     """
     def __init__(self, configs):
         super(Model, self).__init__()
