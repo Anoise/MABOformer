@@ -20,7 +20,7 @@
 ## Training Periodformer with MABO
 Clone the code repository
 ```git
-git clone git@github.com:Anoise/MHE.git
+git clone git@github.com:Anoise/Periodformer.git
 ```
 
 ### Training on ETTm2 Dataset
