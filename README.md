@@ -1,5 +1,6 @@
 # Does Long-Term Series Forecasting Need Complex Attention and Extra Long Inputs?
 
+The repo is the official implementation for the paper: [Does Long-Term Series Forecasting Need Complex Attention and Extra Long Inputs?](https://arxiv.org/abs/2306.05035).
 
 ## Introduction
  Transformer-based application on Long-term Time series Forecasting (LTSF) tasks still has two major issues that need to be further investigated: 1) Whether the sparse attention mechanism designed by these methods actually reduce the running time on real devices; 2) Whether these models need extra long input sequences to guarantee their performance? The answers given in this paper are negative. Therefore, to better copy with these two issues, we design a lightweight Period-Attention mechanism (Periodformer). Furthermore, to take full advantage of GPUs for fast hyperparameter optimization (e.g., finding the suitable input length), a Multi-GPU Asynchronous parallel algorithm based on Bayesian Optimization (MABO) is presented. Compared with the state-of-the-art methods, the prediction error of Periodformer reduced by 13% and 26% for multivariate and univariate forecasting, respectively. In addition, MABO reduces the average search time by 46% while finding better hyperparameters. As a conclusion, this paper indicates that LTSF may not need complex attention and extra long input sequences.
