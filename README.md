@@ -154,3 +154,12 @@ Note that:
 
 Daojun Liang, Haixia Zhang, Dongfeng Yuan, Xiaoyan Ma, Dongyang Li and Minggao Zhang, Does Long-Term Serie Forecasting Need Complex Attention and Extra Long Inputs? arXiv preprint arXiv: 2306.05035 (2023).
 
+```
+@article{liang2023does,
+  title={Does Long-Term Series Forecasting Need Complex Attention and Extra Long Inputs?},
+  author={Liang, Daojun and Zhang, Haixia and Yuan, Dongfeng and Ma, Xiaoyan and Li, Dongyang and Zhang, Minggao},
+  journal={arXiv preprint arXiv:2306.05035},
+  year={2023}
+}
+```
+
